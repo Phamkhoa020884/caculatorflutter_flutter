@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+
 void main() {
   runApp(MyApp());
 }
@@ -9,14 +10,30 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "My App",
-      home: HomePage(),
+    return GestureDetector(
+      onTap: (){
+        FocusScope.of(context).requestFocus(new FocusNode());
+      },
+      child: MaterialApp(
+        title: "My App",
+        home: HomePage(),
+      ),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final TextEditingController textController1 = TextEditingController();
+
+  final TextEditingController textController2 = TextEditingController();
+
+  double dataResult = double.infinity;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +48,7 @@ class HomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextField(
+                  controller: textController1,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -44,6 +62,7 @@ class HomePage extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 TextField(
+                  controller: textController2,
                   textInputAction: TextInputAction.done,
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -58,7 +77,7 @@ class HomePage extends StatelessWidget {
                 SizedBox(height: 10),
                 Center(
                   child: Text(
-                      "Ket qua = 5" ,
+                      dataResult == double.infinity ? "" : "Ket qua = $dataResult" ,
                       style: TextStyle(
                           color: Colors.red ,
                           fontSize: 20,
@@ -72,12 +91,47 @@ class HomePage extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Center(
-                        child: ElevatedButton(onPressed: (){}, child: Text("+")),
+                        child: ElevatedButton(onPressed: (){
+                          String text1 = textController1.text.toString();
+                          String text2 = textController2.text.toString();
+
+                          if (text1.isEmpty || text2.isEmpty){
+                            ScaffoldMessenger
+                                .of(context)
+                                .showSnackBar(
+                                SnackBar(content: Text("Ban chua nhap du thong tin"))
+                            );
+                            return;
+                          }
+                          double number1 = double.parse(text1);
+                          double number2 = double.parse(text2);
+                          setState(() {
+                            dataResult = (number1 + number2);
+                          });
+
+                        }, child: Text("+")),
                       ),
                     ),
                     Expanded(
                       child: Center(
-                        child: ElevatedButton(onPressed: (){}, child: Text("-")),
+                        child: ElevatedButton(onPressed: (){
+                          String text1 = textController1.text.toString();
+                          String text2 = textController2.text.toString();
+
+                          if (text1.isEmpty || text2.isEmpty){
+                            ScaffoldMessenger
+                                .of(context)
+                                .showSnackBar(
+                                SnackBar(content: Text("Ban chua nhap du thong tin"))
+                            );
+                            return;
+                          }
+                          double number1 = double.parse(text1);
+                          double number2 = double.parse(text2);
+                          setState(() {
+                            dataResult = (number1 - number2);
+                          });
+                        }, child: Text("-")),
                       ),
                     )
                   ],
@@ -87,12 +141,56 @@ class HomePage extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Center(
-                        child: ElevatedButton(onPressed: (){}, child: Text("*")),
+                        child: ElevatedButton(onPressed: (){
+                          String text1 = textController1.text.toString();
+                          String text2 = textController2.text.toString();
+
+                          if (text1.isEmpty || text2.isEmpty){
+                            ScaffoldMessenger
+                                .of(context)
+                                .showSnackBar(
+                                SnackBar(content: Text("Ban chua nhap du thong tin"))
+                            );
+                            return;
+                          }
+                          double number1 = double.parse(text1);
+                          double number2 = double.parse(text2);
+                          setState(() {
+                            dataResult = (number1 * number2);
+                          });
+                        }, child: Text("*")),
                       ),
                     ),
                     Expanded(
                       child: Center(
-                        child: ElevatedButton(onPressed: (){}, child: Text("/")),
+                        child: ElevatedButton(onPressed: (){
+                          String text1 = textController1.text.toString();
+                          String text2 = textController2.text.toString();
+
+                          if (text1.isEmpty || text2.isEmpty){
+                            ScaffoldMessenger
+                                .of(context)
+                                .showSnackBar(
+                                SnackBar(content: Text("Ban chua nhap du thong tin"))
+                            );
+                            return;
+                          }
+                          double number1 = double.parse(text1);
+                          double number2 = double.parse(text2);
+
+                          if(number2 == 0){
+                            ScaffoldMessenger
+                                .of(context)
+                                .showSnackBar(
+                                SnackBar(content: Text("Khong chia cho so 0"))
+                            );
+                            return;
+                          }
+
+                          setState(() {
+                            dataResult = (number1 + number2);
+                          });
+                        }, child: Text("/")),
                       ),
                     )
                   ],
@@ -103,3 +201,5 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+
